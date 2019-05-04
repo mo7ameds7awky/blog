@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -71,10 +72,36 @@
                 </div>
             </div>
         </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <div class="container">
+            <div class="row">
+                @if (Auth::check())
+                    <div class="col-lg-4">
+                        <div class="list-group">
+                            <a href="{{route('home')}}" class="list-group-item list-group-item-action">Home</a>
+                            <a href="{{route('categories')}}" class="list-group-item list-group-item-action">Categories</a>
+                            <a href="{{route('categories.create')}}" class="list-group-item list-group-item-action">Create New Category</a>
+                            <a href="{{route('posts')}}" class="list-group-item list-group-item-action">Posts</a>
+                            <a href="{{route('posts.trashed')}}" class="list-group-item list-group-item-action">Trashed Posts</a>
+                            <a href="{{route('posts.create')}}" class="list-group-item list-group-item-action">Create New Post</a>
+                        </div>
+                    </div>
+                @endif
+                <div class='col-lg'>
+                    @include('inc.errors')
+                    @yield('content')
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
+    <script src="{{ asset('js/toastr.min.js') }}"></script>
+    <script>
+        @if(Session::has('success'))
+            toastr.success("{{Session::get('success')}}")
+        @endif
+        @if(Session::has('info'))
+            toastr.info("{{Session::get('info')}}")
+        @endif
+    </script>
 </body>
 </html>
