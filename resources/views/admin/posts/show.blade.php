@@ -21,12 +21,7 @@
                     <tr>
                         <td><img src="{{$post->post_image}}" alt="{{$post->title}}" width="90px" height="70px"></td>
                         <td>{{$post->title}}</td>
-                        <td>
-                            @php
-                                $category = $post->category;
-                                echo $category->category_name;
-                            @endphp
-                        </td>
+                        <td>{{ isset($post->category) ? $post->category->category_name: '-' }}</td>
                         <td><a class="btn btn-primary" href="{{route('posts.edit', ['id' => $post->id])}}" role="button">Update</a></td>
                         <td><a class="btn btn-danger" href="{{route('posts.delete', ['id' => $post->id])}}" role="button">Delete</a></td>
                         <td><a class="btn btn-danger" href="{{route('posts.trash', ['id' => $post->id])}}" role="button">Trash</a></td>

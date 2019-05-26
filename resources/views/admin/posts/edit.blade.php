@@ -25,13 +25,30 @@
                     <label for="post-image">Post Category</label>
                     <select name="category_id" id="" class="form-control">
                         @foreach ($categories as $category)
-                            <option value="{{$category->id}}">{{$category->category_name}}</option>
+                            <option value="{{$category->id}}"
+                                @if ($post->category->id == $category->id)
+                                    selected
+                                @endif    
+                            >{{$category->category_name}}</option>
                         @endforeach
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="tags_name">Post Tags</label>
+                    @foreach ($tags as $tag)
+                        <label class="form-control" for="exampleCheck1">
+                            <input type="checkbox" class="form-check-input" name="tags_name[]" id="exampleCheck1" value="{{$tag->id}}"
+                            @foreach ($post->tags as $_tag)
+                                @if ($tag->id == $_tag->id)
+                                    checked
+                                @endif
+                            @endforeach
+                            >{{$tag->tag_name}} 
+                        </label>   
+                    @endforeach
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg btn-block">Update Post</button>
             </form>
         </div>
     </div>
-    
 @endsection

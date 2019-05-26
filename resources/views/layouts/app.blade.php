@@ -80,9 +80,19 @@
                             <a href="{{route('home')}}" class="list-group-item list-group-item-action">Home</a>
                             <a href="{{route('categories')}}" class="list-group-item list-group-item-action">Categories</a>
                             <a href="{{route('categories.create')}}" class="list-group-item list-group-item-action">Create New Category</a>
+                            <a href="{{route('tags')}}" class="list-group-item list-group-item-action">Tags</a>
+                            <a href="{{route('tags.create')}}" class="list-group-item list-group-item-action">Create New Tag</a>
                             <a href="{{route('posts')}}" class="list-group-item list-group-item-action">Posts</a>
                             <a href="{{route('posts.trashed')}}" class="list-group-item list-group-item-action">Trashed Posts</a>
                             <a href="{{route('posts.create')}}" class="list-group-item list-group-item-action">Create New Post</a>
+                            @if (Auth::user()->admin)
+                                <a href="{{route('users')}}" class="list-group-item list-group-item-action">Users</a>
+                                <a href="{{route('users.create')}}" class="list-group-item list-group-item-action">Add New User</a>
+                            @endif
+                            <a href="{{route('profiles.edit')}}" class="list-group-item list-group-item-action">Profile</a>
+                            @if (Auth::user()->admin)
+                                <a href="{{route('settings')}}" class="list-group-item list-group-item-action">Website Settings</a>
+                            @endif
                         </div>
                     </div>
                 @endif

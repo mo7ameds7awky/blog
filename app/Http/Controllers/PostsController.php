@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Post;
 use App\Category;
+use App\Tag;
 use Illuminate\Http\Request;
 use Session;
+use Auth;
 
 class PostsController extends Controller
 {
@@ -27,14 +29,15 @@ class PostsController extends Controller
     public function create()
     {
         $categories = Category::all();
+        $tags = Tag::all();
 
-        if ($categories->count() == 0) {
-            Session::flash('info', 'You have must created categories beafore creating posts!');
+        if ($categories->count() == 0 || $tags->count() == 0) {
+            Session::flash('info', 'You have must created categories and tags beafore creating posts!');
 
             return redirect()->route('categories.create');
         }
 
-        return view('admin.posts.create')->with('categories', Category::all());
+        return view('admin.posts.create')->with('categories', $categories)->with('tags', $tags);
     }
 
     /**
@@ -47,9 +50,10 @@ class PostsController extends Controller
     {
         $this->validate($request, [
             'title' => 'required|max:100',
-            'content' => 'required|max:500',
+            'content' => 'required',
             'post_image' => 'required|image',
-            'category_id' => 'required'
+            'category_id' => 'required',
+            'tags_name' => 'required'
         ]);
 
         $_post_image = $request->post_image;
@@ -60,13 +64,16 @@ class PostsController extends Controller
 
         $post_image_path = 'uploads/posts/' . $_post_image_name;
 
-        $post = new Post();
+        $post = Post::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'slug' => str_slug($request->title),
+            'post_image' => $post_image_path,
+            'user_id' => Auth::user()->id,
+            'category_id' => $request->category_id
+        ]);
 
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->slug = str_slug($request->title);
-        $post->post_image = $post_image_path;
-        $post->category_id = $request->category_id;
+        $post->tags()->attach($request->tags_name);
         
         $post->save();
 
@@ -94,7 +101,9 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.posts.edit')->with('post', Post::find($id))->with('categories', Category::all());
+        return view('admin.posts.edit')->with('post', Post::find($id))
+                                       ->with('categories', Category::all())
+                                       ->with('tags', Tag::all());
     }
 
     /**
@@ -108,7 +117,7 @@ class PostsController extends Controller
     {
         $this->validate($request, [
             'title' => 'required|max:100',
-            'content' => 'required|max:500',
+            'content' => 'required',
             'post_image' => 'image',
             'category_id' => 'required'
         ]);
@@ -133,6 +142,8 @@ class PostsController extends Controller
         $post->category_id = $request->category_id;
         
         $post->save();
+
+        $post->tags()->sync($request->tags_name);
 
         Session::flash('success', 'Category has been updated successfully');
 
