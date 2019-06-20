@@ -15,7 +15,7 @@
                 </div>
                 <div class="form-group">
                     <label for="content">Post Content</label>
-                    <textarea class="form-control" name="content" id="content" cols="5" rows="5"></textarea>
+                    <textarea id="summernote" class="form-control" name="content" id="content" cols="5" rows="5"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="post_image">Post Image</label>
@@ -41,4 +41,15 @@
             </form>
         </div>
     </div>
+@endsection
+@section('styles')
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.css" rel="stylesheet">
+@endsection
+@section('scripts')
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote.js" defer></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote();
+        });
+    </script>
 @endsection
